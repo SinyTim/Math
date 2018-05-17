@@ -29,6 +29,7 @@ public:
     int rank() const;
     Matrix<Type> T() const;
     Matrix<Type> invert() const;
+    friend ostream& operator<< (ostream& os, const Matrix<Type>& matrix);
 
 
 private:
