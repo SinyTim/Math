@@ -52,6 +52,23 @@ Matrix<Type>::Matrix()
 }
 
 template <class Type>
+Matrix<Type>::Matrix(int rows, int columns) {
+	data = new Type*[rows];
+	for (size_t i = 0; i < rows; ++i) {
+		data[i] = new Type[columns];
+	}
+
+	for (size_t i = 0; i < rows; ++i) {
+		for (size_t j = 0; j < columns; ++j) {
+			data[i][j] = Type();
+		}
+	}
+
+	this->rows = rows;
+	this->columns = columns;
+}
+
+template <class Type>
 Matrix<Type>::~Matrix() {
     for (size_t i = 0; i < rows; ++i) {
         delete[] data[i];
