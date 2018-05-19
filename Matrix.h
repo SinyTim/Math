@@ -6,7 +6,7 @@
 
 namespace Math {
 
-
+    
 
 template <class Type>
 class Matrix {
@@ -14,7 +14,7 @@ class Matrix {
 public:
     Matrix(); 
     Matrix(int rows, int columns);
-    Matrix(Type** arr);
+    Matrix(Type** arr, int rows, int columns);
     Matrix(const Matrix<Type>& obj);
     virtual ~Matrix();
     Type& operator() (int row, int column);
@@ -49,6 +49,23 @@ Matrix<Type>::Matrix()
     : data(nullptr)
     , rows(0)
     , columns(0) {
+}
+
+template <class Type>
+Matrix<Type>::Matrix(Type** arr, int rows, int columns) {
+    data = new Type*[rows];
+    for (size_t i = 0; i < rows; ++i) {
+        data[i] = new Type[columns];
+    }
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < columns; ++j) {
+            data[i][j] = arr[i][j];
+        }
+    }
+
+    this->rows = rows;
+    this->columns = columns;
 }
 
 template <class Type>
