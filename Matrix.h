@@ -2,8 +2,8 @@
 
 #include <iostream>
 
+// ---
 
-//
 namespace Math {
 
 
