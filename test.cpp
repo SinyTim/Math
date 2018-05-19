@@ -3,7 +3,7 @@
 
 
 int main() {
-    Math::Matrix<int> matrix;
+    Math::Matrix<int> matrix;// = {{1, 2}, {3, 4}};
 
     std::cout << "\n";
     system("pause");

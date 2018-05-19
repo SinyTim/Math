@@ -13,11 +13,11 @@ class Matrix {
 
 public:
     Matrix(); 
-    Matrix(int rows, int columns);
-    Matrix(Type** arr, int rows, int columns);
-    Matrix(const Matrix<Type>& obj);
+    Matrix(size_t rows, size_t columns);
+    Matrix(Type** arr, size_t rows, size_t columns);
+    explicit Matrix(const Matrix<Type>& obj);
     virtual ~Matrix();
-    Type& operator() (int row, int column);
+    Type& operator() (size_t row, size_t column);
     Matrix<Type>& operator= (const Matrix<Type>& matrix);
     Matrix<Type>& operator+= (const Matrix<Type>& matrix);
     Matrix<Type>& operator-= (const Matrix<Type>& matrix);
@@ -27,7 +27,7 @@ public:
     Matrix<Type> operator- (const Matrix<Type>& matrix) const;
     Matrix<Type> operator* (const Type& scalar) const;
     Matrix<Type> operator* (const Matrix<Type>& matrix) const;
-    Matrix<Type> operator^ (unsigned int degree) const;
+    Matrix<Type> operator^ (size_t degree) const;
     bool operator== (const Matrix<Type>& obj) const;
     Type det() const;
     int rank() const;
@@ -37,8 +37,8 @@ public:
 
 
 protected:
-    const int rows;
-    const int columns;
+    const size_t rows;
+    const size_t columns;
     Type** data;
 };
 
@@ -52,7 +52,10 @@ Matrix<Type>::Matrix()
 }
 
 template <class Type>
-Matrix<Type>::Matrix(int rows, int columns) {
+Matrix<Type>::Matrix(size_t rows, size_t columns) 
+    : rows(rows)
+    , columns(columns) {
+
 	data = new Type*[rows];
 	for (size_t i = 0; i < rows; ++i) {
 		data[i] = new Type[columns];
@@ -63,13 +66,13 @@ Matrix<Type>::Matrix(int rows, int columns) {
 			data[i][j] = Type();
 		}
 	}
-
-	this->rows = rows;
-	this->columns = columns;
 }
 
 template <class Type>
-Matrix<Type>::Matrix(Type** arr, int rows, int columns) {
+Matrix<Type>::Matrix(Type** arr, size_t rows, size_t columns)
+    : rows(rows)
+    , columns(columns) {
+
     data = new Type*[rows];
     for (size_t i = 0; i < rows; ++i) {
         data[i] = new Type[columns];
@@ -80,9 +83,23 @@ Matrix<Type>::Matrix(Type** arr, int rows, int columns) {
             data[i][j] = arr[i][j];
         }
     }
+}
 
-    this->rows = rows;
-    this->columns = columns;
+template<class Type>
+Matrix<Type>::Matrix(const Matrix<Type>& obj) 
+    : rows(obj.rows)
+    , columns(obj.columns) {
+    
+    data = new Type*[rows];
+    for (size_t i = 0; i < rows; ++i) {
+        data[i] = new Type[columns];
+    }
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < columns; ++j) {
+            data[i][j] = obj.data[i][j];
+        }
+    }
 }
 
 template <class Type>
