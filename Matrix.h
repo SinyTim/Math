@@ -32,10 +32,10 @@ class Matrix {
 
 public:
     Matrix(); 
-    Matrix(size_t rows, size_t columns);
-    Matrix(Type** arr, size_t rows, size_t columns);
-    Matrix(std::initializer_list< std::initializer_list<Type> > list); // TODO надо обработать throw.
+    explicit Matrix(size_t rows, size_t columns);
+    explicit Matrix(Type** arr, size_t rows, size_t columns);
     explicit Matrix(const Matrix<Type>& obj);
+    Matrix(std::initializer_list< std::initializer_list<Type> > list); // TODO надо обработать throw.
     virtual ~Matrix();
     Type& operator() (size_t row, size_t column);
     Matrix<Type>& operator= (const Matrix<Type>& matrix);
@@ -106,6 +106,23 @@ Matrix<Type>::Matrix(Type** arr, size_t rows, size_t columns)
 }
 
 template<class Type>
+Matrix<Type>::Matrix(const Matrix<Type>& obj)
+    : rows(obj.rows)
+    , columns(obj.columns) {
+
+    data = new Type*[rows];
+    for (size_t i = 0; i < rows; ++i) {
+        data[i] = new Type[columns];
+    }
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < columns; ++j) {
+            data[i][j] = obj.data[i][j];
+        }
+    }
+}
+
+template<class Type>
 Matrix<Type>::Matrix(std::initializer_list< std::initializer_list<Type> > list) 
     : rows(list.size())
     , columns(list.begin()->size()) {
@@ -127,23 +144,6 @@ Matrix<Type>::Matrix(std::initializer_list< std::initializer_list<Type> > list)
             ++j;
         }
         ++i;
-    }
-}
-
-template<class Type>
-Matrix<Type>::Matrix(const Matrix<Type>& obj) 
-    : rows(obj.rows)
-    , columns(obj.columns) {
-    
-    data = new Type*[rows];
-    for (size_t i = 0; i < rows; ++i) {
-        data[i] = new Type[columns];
-    }
-
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < columns; ++j) {
-            data[i][j] = obj.data[i][j];
-        }
     }
 }
 
