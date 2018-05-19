@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-// ---
+
 
 namespace Math {
 
@@ -59,7 +59,7 @@ Matrix<Type>::~Matrix() {
     delete[] data;
 }
 
-// ---
+
 
 
 }

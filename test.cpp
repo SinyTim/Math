@@ -5,7 +5,7 @@
 int main() {
     Math::Matrix<int> matrix;
 
-    std::cout << "ups\n";
+    std::cout << "\n";
     system("pause");
     return 0;
 }
