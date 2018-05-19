@@ -60,7 +60,7 @@ Matrix<Type>::~Matrix() {
 }
 
 // ---
-
+// ---
 
 
 }
