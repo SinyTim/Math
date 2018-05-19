@@ -1,4 +1,3 @@
 ﻿  test.cpp
-  LINK : C:\Users\Tim\Documents\GitHub\Math\x64\Debug\Math.exe not found or not built by the last incremental link; performing full link
-  Math.vcxproj -> C:\Users\Tim\Documents\GitHub\Math\x64\Debug\Math.exe
-  Math.vcxproj -> C:\Users\Tim\Documents\GitHub\Math\x64\Debug\Math.pdb (Partial PDB)
+  Math.vcxproj -> C:\Users\protyom\Documents\GitHub\Math\x64\Debug\Math.exe
+  Math.vcxproj -> C:\Users\protyom\Documents\GitHub\Math\x64\Debug\Math.pdb (Partial PDB)
