@@ -4,7 +4,6 @@
 //я влез
 
 
-
 namespace Math {
 
 
