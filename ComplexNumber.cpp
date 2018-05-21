@@ -3,18 +3,18 @@
 
 
 Math::ComplexNumber::ComplexNumber() 
-    : re(0)
-    , im(0) {
+    : real_(0)
+    , imaginary_(0) {
 }
 
-Math::ComplexNumber::ComplexNumber(double re, double im)
-    : re(re)
-    , im(im) {
+Math::ComplexNumber::ComplexNumber(double real, double imaginary)
+    : real_(real)
+    , imaginary_(imaginary) {
 }
 
 Math::ComplexNumber::ComplexNumber(const ComplexNumber& obj)
-    : re(obj.re)
-    , im(obj.im) {
+    : real_(obj.real_)
+    , imaginary_(obj.imaginary_) {
 }
 
 Math::ComplexNumber::~ComplexNumber() = default;

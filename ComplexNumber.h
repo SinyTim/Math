@@ -11,7 +11,7 @@ namespace Math {
 class ComplexNumber {
 public:
     ComplexNumber();
-    explicit ComplexNumber(double re, double im);
+    explicit ComplexNumber(double real, double imaginary);
     explicit ComplexNumber(const ComplexNumber& obj);
     virtual ~ComplexNumber();
     ComplexNumber& operator= (const ComplexNumber& complex);
@@ -30,8 +30,8 @@ public:
 
 
 protected:
-    double re;
-    double im;
+    double real_;
+    double imaginary_;
 };
 
 

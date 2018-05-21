@@ -16,8 +16,8 @@ public:
 
 
 private:
-    const size_t _rows;
-    const size_t _columns;
+    const size_t rows_;
+    const size_t columns_;
 };
 
 

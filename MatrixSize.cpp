@@ -3,21 +3,21 @@
 
 
 Math::MatrixSize::MatrixSize()
-    : _rows(0)
-    , _columns(0) {
+    : rows_(0)
+    , columns_(0) {
 }
 
 Math::MatrixSize::MatrixSize(size_t rows, size_t columns)
-    : _rows(rows)
-    , _columns(columns) {
+    : rows_(rows)
+    , columns_(columns) {
 }
 
 Math::MatrixSize::~MatrixSize() = default;
 
 size_t Math::MatrixSize::rows() const {
-    return _rows;
+    return rows_;
 }
 
 size_t Math::MatrixSize::columns() const {
-    return _columns;
+    return columns_;
 }

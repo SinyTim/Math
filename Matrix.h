@@ -15,10 +15,10 @@ class Matrix;
 template <class Type>
 std::ostream& operator<< (std::ostream& out, const Matrix<Type>& matrix) {
     out << "[\n";
-    for (size_t i = 0; i < matrix.size.rows(); ++i) {
+    for (size_t i = 0; i < matrix.size_.rows(); ++i) {
         out << "[ ";
-        for (size_t j = 0; j < matrix.size.columns(); ++j) {
-            out << matrix.data[i][j] << " ";
+        for (size_t j = 0; j < matrix.size_.columns(); ++j) {
+            out << matrix.data_[i][j] << " ";
         }
         out << "]\n";
     }
@@ -60,85 +60,85 @@ public:
 
 
 protected:
-    const MatrixSize size;
-    Type** data;
+    const MatrixSize size_;
+    Type** data_;
 };
 
 
 
 template <class Type>
 Matrix<Type>::Matrix() 
-    : data(nullptr)
-    , size(0, 0) {
+    : data_(nullptr)
+    , size_(0, 0) {
 }
 
 template <class Type>
 Matrix<Type>::Matrix(size_t rows, size_t columns) 
-    : size(rows, columns) {
+    : size_(rows, columns) {
     
-	data = new Type*[size.rows()];
-	for (size_t i = 0; i < size.rows(); ++i) {
-		data[i] = new Type[size.columns()];
+	data_ = new Type*[size_.rows()];
+	for (size_t i = 0; i < size_.rows(); ++i) {
+		data_[i] = new Type[size_.columns()];
 	}
 
-	for (size_t i = 0; i < size.rows(); ++i) {
-		for (size_t j = 0; j < size.columns(); ++j) {
-			data[i][j] = Type();
+	for (size_t i = 0; i < size_.rows(); ++i) {
+		for (size_t j = 0; j < size_.columns(); ++j) {
+			data_[i][j] = Type();
 		}
 	}
 }
 
 template <class Type>
 Matrix<Type>::Matrix(Type** arr, size_t rows, size_t columns)
-    : size(rows, columns) {
+    : size_(rows, columns) {
 
-    data = new Type*[size.rows()];
-    for (size_t i = 0; i < size.rows(); ++i) {
-        data[i] = new Type[size.columns()];
+    data_ = new Type*[size_.rows()];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        data_[i] = new Type[size_.columns()];
     }
 
-    for (size_t i = 0; i < size.rows(); ++i) {
-        for (size_t j = 0; j < size.columns(); ++j) {
-            data[i][j] = arr[i][j];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            data_[i][j] = arr[i][j];
         }
     }
 }
 
 template<class Type>
 Matrix<Type>::Matrix(const Matrix<Type>& obj)
-    : size(obj.size) {
+    : size_(obj.size_) {
 
-    data = new Type*[size.rows()];
-    for (size_t i = 0; i < size.rows(); ++i) {
-        data[i] = new Type[size.columns()];
+    data_ = new Type*[size_.rows()];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        data_[i] = new Type[size_.columns()];
     }
 
-    for (size_t i = 0; i < size.rows(); ++i) {
-        for (size_t j = 0; j < size.columns(); ++j) {
-            data[i][j] = obj.data[i][j];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            data_[i][j] = obj.data_[i][j];
         }
     }
 }
 
 template<class Type>
 Matrix<Type>::Matrix(std::initializer_list< std::initializer_list<Type> > list) 
-    : size(list.size(), list.begin()->size()) {
+    : size_(list.size(), list.begin()->size()) {
 
-    data = new Type*[size.rows()];
-    for (size_t i = 0; i < size.rows(); ++i) {
-        data[i] = new Type[size.columns()];
+    data_ = new Type*[size_.rows()];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        data_[i] = new Type[size_.columns()];
     }
     
     size_t i = 0;
     size_t j = 0;
     for (const auto& row : list) {
-        if (row.size() != size.columns()) {
+        if (row.size() != size_.columns()) {
             std::cerr << "Error in class Matrix: invalid initializer list.";
             throw;
         }
         j = 0;
         for (const auto& element : row) {
-            data[i][j] = element;
+            data_[i][j] = element;
             ++j;
         }
         ++i;
@@ -147,10 +147,10 @@ Matrix<Type>::Matrix(std::initializer_list< std::initializer_list<Type> > list)
 
 template <class Type>
 Matrix<Type>::~Matrix() {
-    for (size_t i = 0; i < size.rows(); ++i) {
-        delete[] data[i];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        delete[] data_[i];
     }
-    delete[] data;
+    delete[] data_;
 }
 
 
