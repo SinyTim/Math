@@ -6,16 +6,18 @@ using namespace std;
 
 
 int main() {
-    int** arr = new int*[3];
-    for (size_t i = 0; i < 3; ++i) {
-        arr[i] = new int[3] {static_cast<int>(i + 1), 
-                             static_cast<int>(i + 2), 
-                             static_cast<int>(i + 3)};
+    Math::MatrixSize size0(5, 6);
+    int** arr = new int*[size0.rows()];
+    for (size_t i = 0; i < size0.rows(); ++i) {
+        arr[i] = new int[size0.columns()];
+        for (size_t j = 0; j < size0.columns(); ++j) {
+            arr[i][j] = static_cast<int>(i * j + 1 + j);
+        }
     }
 
     Math::Matrix<int> m1 = {{1, 64}, {45, 4}, {4, 5}};
     Math::Matrix<int> m2(4, 5);
-    Math::Matrix<int> m3(arr, 3, 3);
+    Math::Matrix<int> m3(arr, size0.rows(), size0.columns());
     cout << "Matrix1: " << m1 << "\n";
     cout << "Matrix2: " << m2 << "\n";
     cout << "Matrix3: " << m3 << "\n";
