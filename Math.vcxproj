@@ -119,6 +119,7 @@
     <ClInclude Include="ComplexNumber.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixSize.h" />
+    <ClInclude Include="Polynomial.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

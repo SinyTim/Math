@@ -35,25 +35,25 @@ public:
     Matrix(); 
     explicit Matrix(size_t rows, size_t columns);
     explicit Matrix(Type** arr, size_t rows, size_t columns);
-    explicit Matrix(const Matrix<Type>& obj);
+    explicit Matrix(const Matrix<Type>& matrix);
     Matrix(std::initializer_list< std::initializer_list<Type> > list);
     virtual ~Matrix();
     Type& operator() (size_t row, size_t column);
     Matrix<Type>& operator= (const Matrix<Type>& matrix); // if (this != &matrix) { value = matrix.value; } return *this;
     Matrix<Type>& operator+= (const Matrix<Type>& matrix);
     Matrix<Type>& operator-= (const Matrix<Type>& matrix);
-    Matrix<Type>& operator*= (const Type& scalar);
     Matrix<Type>& operator*= (const Matrix<Type>& matrix);
+    Matrix<Type>& operator*= (const Type& scalar);
     Matrix<Type> operator+ (const Matrix<Type>& matrix) const;
     Matrix<Type> operator- (const Matrix<Type>& matrix) const;
-    Matrix<Type> operator* (const Type& scalar) const; // TODO What if 4x0 and 0x3?
-    Matrix<Type> operator* (const Matrix<Type>& matrix) const;
+    Matrix<Type> operator* (const Matrix<Type>& matrix) const; // TODO What if 4x0 and 0x3?
+    Matrix<Type> operator* (const Type& scalar) const;
     Matrix<Type> operator^ (size_t degree) const;
-    bool operator== (const Matrix<Type>& obj) const;
-    Type det() const;
-    int rank() const;
-    Matrix<Type> T() const;
-    Matrix<Type> invert() const;
+    bool operator== (const Matrix<Type>& matrix) const;
+    Matrix<Type> transpose() const;
+    Matrix<Type> invertible() const;
+    Type determinant() const;
+    size_t rank() const;
     Type** getData() const;
     MatrixSize getSize() const;
     friend std::ostream& operator<< <Type> (std::ostream& out, const Matrix<Type>& matrix);

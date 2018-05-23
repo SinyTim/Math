@@ -10,12 +10,12 @@ class MatrixSize {
 public:
     MatrixSize();
     explicit MatrixSize(size_t rows, size_t columns);
-    ~MatrixSize();
+    virtual ~MatrixSize();
     size_t rows() const;
     size_t columns() const;
 
 
-private:
+protected:
     const size_t rows_;
     const size_t columns_;
 };
