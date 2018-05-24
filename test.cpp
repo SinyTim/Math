@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Matrix.h"
+#include "ComplexNumber.h"
 
 
 using namespace std;
@@ -22,6 +23,9 @@ int main() {
     cout << "Matrix2: " << m2 << "\n";
     cout << "Matrix3: " << m3 << "\n";
 
+	Math::ComplexNumber c1(2,2), c2(2,2);
+	c1 /= c2;
+	cout << c1;
     cout << "\n";
     system("pause");
     return 0;
