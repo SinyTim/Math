@@ -40,13 +40,13 @@ ComplexNumber& ComplexNumber::operator-= (const ComplexNumber& complex) {
 }
 
 ComplexNumber& ComplexNumber::operator*= (const ComplexNumber& complex) {
-    double this_real = real_; 
+    double this_real = real_;
     double this_imaginary = imaginary_;
 
-	if (this == &complex) {
-		real_ = this_real * this_real - this_imaginary * this_imaginary;
-		imaginary_ = 2 * this_real * this_imaginary;
-		return *this;
+    if (this == &complex) {
+        real_ = this_real * this_real - this_imaginary * this_imaginary;
+        imaginary_ = 2 * this_real * this_imaginary;
+        return *this;
     }
 
     real_ = this_real * complex.real_ - this_imaginary * complex.imaginary_;
@@ -60,24 +60,24 @@ ComplexNumber& ComplexNumber::operator/= (const ComplexNumber& complex) {
         throw;
     }
 
-    double this_real = real_; 
+    double this_real = real_;
     double this_imaginary = imaginary_;
 
-	if (this == &complex) {
-		real_ = 1;
-		imaginary_ = 0;
-		return *this;
-	}
+    if (this == &complex) {
+        real_ = 1;
+        imaginary_ = 0;
+        return *this;
+    }
 
-	real_ = (this_real * complex.real_ + this_imaginary * complex.imaginary_) 
+    real_ = (this_real * complex.real_ + this_imaginary * complex.imaginary_)
         / (complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_);
-	imaginary_ = (this_imaginary * complex.real_ - this_real * complex.imaginary_) 
+    imaginary_ = (this_imaginary * complex.real_ - this_real * complex.imaginary_)
         / (complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_);
-	return *this;
+    return *this;
 }
 
 ComplexNumber ComplexNumber::operator+ (const ComplexNumber& complex) const {
-	return ComplexNumber(real_ + complex.real_,
+    return ComplexNumber(real_ + complex.real_, 
                          imaginary_ + complex.imaginary_);
 }
 
