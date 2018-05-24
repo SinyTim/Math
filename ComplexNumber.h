@@ -4,15 +4,15 @@
 
 
 
-namespace Math {
+namespace math {
 
 
 
 class ComplexNumber {
 public:
     ComplexNumber();
-    explicit ComplexNumber(double real, double imaginary);
-    explicit ComplexNumber(const ComplexNumber& complex);
+    ComplexNumber(double real, double imaginary = 0);
+    ComplexNumber(const ComplexNumber& complex);
     virtual ~ComplexNumber();
     ComplexNumber& operator= (const ComplexNumber& complex);
     ComplexNumber& operator+= (const ComplexNumber& complex);

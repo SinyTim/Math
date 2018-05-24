@@ -4,7 +4,7 @@
 
 
 
-namespace Math {
+namespace math {
 
 
 
@@ -13,9 +13,8 @@ class Polynomial {
 
 public:
     Polynomial();
-    explicit Polynomial(const std::vector<Type>& coefficients);
-    explicit Polynomial(const Polynomial<Type>& polynom);
-    Polynomial(std::initializer_list<Type> list);
+    Polynomial(const std::vector<Type>& coefficients);
+    Polynomial(const Polynomial<Type>& polynom);
     virtual ~Polynomial();
     Type& operator[] (size_t coefficient_number);
     Polynomial<Type>& operator= (const Polynomial<Type>& polynom);

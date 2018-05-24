@@ -5,7 +5,7 @@
 
 
 
-namespace Math {
+namespace math {
 
 
 
@@ -35,7 +35,7 @@ public:
     Matrix(); 
     explicit Matrix(size_t rows, size_t columns);
     explicit Matrix(Type** arr, size_t rows, size_t columns);
-    explicit Matrix(const Matrix<Type>& matrix);
+    Matrix(const Matrix<Type>& matrix);
     Matrix(std::initializer_list< std::initializer_list<Type> > list);
     virtual ~Matrix();
     Type& operator() (size_t row, size_t column);

@@ -2,7 +2,7 @@
 
 
 
-namespace Math {
+namespace math {
 
 
 

@@ -1,3 +1,2 @@
-﻿  ComplexNumber.cpp
-c:\users\protyom\documents\github\math\complexnumber.cpp(76): error C2440: return: невозможно преобразовать "Math::ComplexNumber" в "Math::ComplexNumber"
-  c:\users\protyom\documents\github\math\complexnumber.cpp(76): note: Конструктор для class "Math::ComplexNumber" объявлен как "explicit"
+﻿  test.cpp
+  Math.vcxproj -> C:\Users\Tim\Documents\GitHub\Math\x64\Debug\Math.exe
