@@ -22,21 +22,21 @@ ComplexNumber::ComplexNumber(const ComplexNumber& complex)
 ComplexNumber::~ComplexNumber() = default;
 
 ComplexNumber& ComplexNumber::operator= (const ComplexNumber& complex) {
-	real_ = complex.real_;
-	imaginary_ = complex.imaginary_;
-	return *this;
+    real_ = complex.real_;
+    imaginary_ = complex.imaginary_;
+    return *this;
 }
 
 ComplexNumber& ComplexNumber::operator+= (const ComplexNumber& complex) {
-	real_ += complex.real_;
-	imaginary_ += complex.imaginary_;
-	return *this;
+    real_ += complex.real_;
+    imaginary_ += complex.imaginary_;
+    return *this;
 }
 
 ComplexNumber& ComplexNumber::operator-= (const ComplexNumber& complex) {
-	real_ -= complex.real_;
-	imaginary_ -= complex.imaginary_;
-	return *this;
+    real_ -= complex.real_;
+    imaginary_ -= complex.imaginary_;
+    return *this;
 }
 
 ComplexNumber& ComplexNumber::operator*= (const ComplexNumber& complex) {
