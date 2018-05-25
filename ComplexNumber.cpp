@@ -1,8 +1,11 @@
 #include "ComplexNumber.h"
+
 #include <cmath>
 
 
-using namespace math;
+
+namespace math {
+
 
 
 ComplexNumber::ComplexNumber() 
@@ -82,44 +85,44 @@ ComplexNumber ComplexNumber::operator+ (const ComplexNumber& complex) const {
                          imaginary_ + complex.imaginary_);
 }
 
-ComplexNumber ComplexNumber::operator-(const ComplexNumber & complex) const {
+ComplexNumber ComplexNumber::operator- (const ComplexNumber& complex) const {
     return ComplexNumber(real_ - complex.real_,
                          imaginary_ - complex.imaginary_);
 }
 
-ComplexNumber math::ComplexNumber::operator*(const ComplexNumber & complex) const {
-    return ComplexNumber(real_*complex.real_-imaginary_*complex.imaginary_,
-        real_*complex.imaginary_ + imaginary_ * complex.real_);
+ComplexNumber ComplexNumber::operator* (const ComplexNumber& complex) const {
+    return ComplexNumber(real_ * complex.real_ - imaginary_ * complex.imaginary_,
+                         real_ * complex.imaginary_ + imaginary_ * complex.real_);
 }
 
-ComplexNumber math::ComplexNumber::operator/(const ComplexNumber & complex) const {
+ComplexNumber ComplexNumber::operator/ (const ComplexNumber& complex) const {
     if (complex.real_ == 0 && complex.imaginary_ == 0) {
         std::cerr << "Error in class ComplexNumber: division by zero.";
+        throw;
     }
-    
-    return ComplexNumber((real_*complex.real_ + imaginary_ *
-        complex.imaginary_)/(complex.real_*complex.real_+
-            complex.imaginary_*complex.imaginary_),
-        (imaginary_*complex.real_ - real_ *
-            complex.imaginary_) / (complex.real_*complex.real_ +
-        complex.imaginary_*complex.imaginary_));
+
+    double result_real = (real_ * complex.real_ + imaginary_ * complex.imaginary_) 
+        / (complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_);
+
+    double result_imaginary = (imaginary_ * complex.real_ - real_ * complex.imaginary_) 
+        / (complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_);
+
+    return ComplexNumber(result_real, result_imaginary);
 }
 
-bool math::ComplexNumber::operator==(const ComplexNumber & complex) const {
-    if (fabs(real_-complex.real_)<1.E-9 && 
-        fabs(imaginary_ - complex.imaginary_)<1.E-9) {
-        return true;
-    } else {
-        return false;
-    }
+bool ComplexNumber::operator== (const ComplexNumber& complex) const {
+    const double EPS = 1E-9;
+
+    return ((fabs(real_ - complex.real_) < EPS) &&
+            (fabs(imaginary_ - complex.imaginary_) < EPS));
 }
 
 ComplexNumber ComplexNumber::conjugate() const {
     return ComplexNumber(real_, -imaginary_);
 }
 
-double math::ComplexNumber::modulus() const {
-    return sqrt(real_*real_+imaginary_*imaginary_);
+double ComplexNumber::modulus() const {
+    return sqrt(real_ * real_ + imaginary_ * imaginary_);
 }
 
 std::ostream& math::operator<< (std::ostream& out, const ComplexNumber& complex) {
@@ -143,4 +146,8 @@ std::ostream& math::operator<< (std::ostream& out, const ComplexNumber& complex)
         out << '0';
     }
     return out;
+}
+
+
+
 }
