@@ -23,9 +23,17 @@ int main() {
     cout << "Matrix2: " << m2 << "\n";
     cout << "Matrix3: " << m3 << "\n";
 
-    math::ComplexNumber c1(2, -2), c2(5, 1);
-    c1 *= c2;
-    cout << c1 + 5 << '\n';
+    math::ComplexNumber c1(2, -2), c2(2, -2);
+
+    if(c1==c2)
+        cout << "Ok\n";
+
+    math::ComplexNumber c3(5, 10), c4(3, 4);
+    cout << c3 * c4 << endl;
+    cout << c3 / c4 << endl;
+
+    c4 = c4.conjugate();
+    cout << c4.modulus() << endl;
 
     math::Matrix<math::ComplexNumber> mc = {
         {{2, 1}, {-1, 4}}, 
@@ -34,6 +42,5 @@ int main() {
     cout << "Complex matrix: " << mc;
 
     cout << "\n";
-    system("pause");
     return 0;
 }
