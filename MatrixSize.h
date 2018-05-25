@@ -13,11 +13,14 @@ public:
     virtual ~MatrixSize();
     size_t rows() const;
     size_t columns() const;
+    MatrixSize& operator=(const MatrixSize& size);
+    bool isMatchedForMultiplicationOn(const MatrixSize& size) const;
+    bool isMatchedForAdditionWith(const MatrixSize& size) const;
 
 
 protected:
-    const size_t rows_;
-    const size_t columns_;
+    size_t rows_;
+    size_t columns_;
 };
 
 

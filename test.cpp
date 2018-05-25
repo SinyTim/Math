@@ -12,11 +12,10 @@ void testComplex();
 
 
 int main() {
-    //testMatrix();
+    testMatrix();
     testComplex();
 
     cout << "\n";
-    system("pause");
     return 0;
 }
 
@@ -44,6 +43,20 @@ void testMatrix() {
         {{0, 0}, {3, -7}}
     };
     cout << "Complex matrix: " << mc;
+
+    math::Matrix<int> m4 = { { 1, 64 },{ 45, 4 },{ 4, 5 } };
+    math::Matrix<int> m5 = { { 2, 6 },{ 452, 7 },{ 0, 5 } };
+    m4 += m5;
+    cout << "Matrix4: " << m4 << "\n";
+
+    m4 *= 5;
+    cout << "Matrix4: " << m4 << "\n";
+
+    math::Matrix<int> m6 = { { 3, 3, 3 },{ 3, 3, 3 } };
+    math::Matrix<int> m7 = { { 1 },{ 1 },{ 1 } };
+    m4 = m6;
+    m4 *= m7;
+    cout << "Matrix4: " << m4 << "\n";
 }
 
 void testComplex() {

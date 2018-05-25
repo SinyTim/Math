@@ -26,6 +26,28 @@ size_t MatrixSize::columns() const {
     return columns_;
 }
 
+MatrixSize & MatrixSize::operator=(const MatrixSize & size) {
+    rows_ = size.rows_;
+    columns_ = size.columns_;
+    return *this;
+}
+
+bool MatrixSize::isMatchedForMultiplicationOn(const MatrixSize & size) const {
+    if (columns_== size.rows_) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool MatrixSize::isMatchedForAdditionWith(const MatrixSize & size) const {
+    if (columns_ == size.columns_ && rows_ == size.rows_) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 
 }
