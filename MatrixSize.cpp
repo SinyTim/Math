@@ -16,7 +16,30 @@ MatrixSize::MatrixSize(size_t rows, size_t columns)
     , columns_(columns) {
 }
 
+MatrixSize::MatrixSize(const MatrixSize& size) 
+    : rows_(size.rows_)
+    , columns_ (size.columns_) {
+}
+
 MatrixSize::~MatrixSize() = default;
+
+MatrixSize& MatrixSize::operator= (const MatrixSize& size) {
+    rows_ = size.rows_;
+    columns_ = size.columns_;
+    return *this;
+}
+
+bool MatrixSize::operator== (const MatrixSize& size) const {
+    return (rows_ == size.rows_) && (columns_ == size.columns_);
+}
+
+bool MatrixSize::operator!= (const MatrixSize& size) const {
+    return (rows_ != size.rows_) || (columns_ != size.columns_);
+}
+
+bool MatrixSize::isMatchedForMultiplicationOn(const MatrixSize& size) const {
+    return (columns_ == size.rows_);
+}
 
 size_t MatrixSize::rows() const {
     return rows_;
@@ -24,28 +47,6 @@ size_t MatrixSize::rows() const {
 
 size_t MatrixSize::columns() const {
     return columns_;
-}
-
-MatrixSize & MatrixSize::operator=(const MatrixSize & size) {
-    rows_ = size.rows_;
-    columns_ = size.columns_;
-    return *this;
-}
-
-bool MatrixSize::isMatchedForMultiplicationOn(const MatrixSize & size) const {
-    if (columns_== size.rows_) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool MatrixSize::isMatchedForAdditionWith(const MatrixSize & size) const {
-    if (columns_ == size.columns_ && rows_ == size.rows_) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 

@@ -64,14 +64,14 @@ ComplexNumber& ComplexNumber::operator/= (const ComplexNumber& complex) {
         throw;
     }
 
-    double this_real = real_;
-    double this_imaginary = imaginary_;
-
     if (this == &complex) {
         real_ = 1;
         imaginary_ = 0;
         return *this;
     }
+
+    double this_real = real_;
+    double this_imaginary = imaginary_;
 
     real_ = (this_real * complex.real_ + this_imaginary * complex.imaginary_)
         / (complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_);

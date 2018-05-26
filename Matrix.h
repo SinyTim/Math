@@ -35,18 +35,19 @@ public:
     Matrix(); 
     explicit Matrix(size_t rows, size_t columns);
     explicit Matrix(Type** arr, size_t rows, size_t columns);
+    explicit Matrix(Type** arr, const MatrixSize& size);
     Matrix(const Matrix<Type>& matrix);
     Matrix(std::initializer_list< std::initializer_list<Type> > list);
     virtual ~Matrix();
     Type& operator() (size_t row, size_t column);
-    Matrix<Type>& operator= (const Matrix<Type>& matrix); // if (this != &matrix) { value = matrix.value; } return *this;
+    Matrix<Type>& operator= (const Matrix<Type>& matrix);
     Matrix<Type>& operator+= (const Matrix<Type>& matrix);
     Matrix<Type>& operator-= (const Matrix<Type>& matrix);
     Matrix<Type>& operator*= (const Matrix<Type>& matrix);
     Matrix<Type>& operator*= (const Type& scalar);
     Matrix<Type> operator+ (const Matrix<Type>& matrix) const;
     Matrix<Type> operator- (const Matrix<Type>& matrix) const;
-    Matrix<Type> operator* (const Matrix<Type>& matrix) const; // TODO What if 4x0 and 0x3?
+    Matrix<Type> operator* (const Matrix<Type>& matrix) const;
     Matrix<Type> operator* (const Type& scalar) const;
     Matrix<Type> operator^ (size_t degree) const; // TODO degree == 0?
     bool operator== (const Matrix<Type>& matrix) const;
@@ -104,9 +105,9 @@ Matrix<Type>::Matrix(Type** arr, size_t rows, size_t columns)
     }
 }
 
-template<class Type>
-Matrix<Type>::Matrix(const Matrix<Type>& obj)
-    : size_(obj.size_) {
+template <class Type>
+Matrix<Type>::Matrix(Type** arr, const MatrixSize& size) 
+    : size_(size) {
 
     data_ = new Type*[size_.rows()];
     for (size_t i = 0; i < size_.rows(); ++i) {
@@ -115,7 +116,23 @@ Matrix<Type>::Matrix(const Matrix<Type>& obj)
 
     for (size_t i = 0; i < size_.rows(); ++i) {
         for (size_t j = 0; j < size_.columns(); ++j) {
-            data_[i][j] = obj.data_[i][j];
+            data_[i][j] = arr[i][j];
+        }
+    }
+}
+
+template<class Type>
+Matrix<Type>::Matrix(const Matrix<Type>& matrix)
+    : size_(matrix.size_) {
+
+    data_ = new Type*[size_.rows()];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        data_[i] = new Type[size_.columns()];
+    }
+
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            data_[i][j] = matrix.data_[i][j];
         }
     }
 }
@@ -154,17 +171,21 @@ Matrix<Type>::~Matrix() {
 }
 
 template<class Type>
-inline Type & Matrix<Type>::operator()(size_t row, size_t column) {
+Type& Matrix<Type>::operator() (size_t row, size_t column) {
+    if ((row >= size_.rows()) || (column >= size_.columns())) {
+        std::cerr << "Error in class Matrix: invalid parameters.";
+        throw;
+    }
     return data_[row][column];
 }
 
 template<class Type>
-Matrix<Type>& Matrix<Type>::operator=(const Matrix<Type>& matrix) {
+Matrix<Type>& Matrix<Type>::operator= (const Matrix<Type>& matrix) {
     if (this == &matrix) {
         return *this;
     }
 
-    for (size_t i = 0; i < size_.rows(); i++) {
+    for (size_t i = 0; i < size_.rows(); ++i) {
         delete [] data_[i];
     }
     delete [] data_;
@@ -175,8 +196,8 @@ Matrix<Type>& Matrix<Type>::operator=(const Matrix<Type>& matrix) {
         data_[i] = new Type[size_.columns()];
     }
 
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < size_.columns(); j++) {
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
             data_[i][j] = matrix.data_[i][j];
         }
     }
@@ -184,15 +205,15 @@ Matrix<Type>& Matrix<Type>::operator=(const Matrix<Type>& matrix) {
 }
 
 template<class Type>
-Matrix<Type>& Matrix<Type>::operator+=(const Matrix<Type>& matrix) {
+Matrix<Type>& Matrix<Type>::operator+= (const Matrix<Type>& matrix) {
     
-    if (!size_.isMatchedForAdditionWith(matrix.size_)) {
+    if (size_ != matrix.size_) {
         std::cerr << "Error in class Matrix: invalid matrix size for addition.";
         throw;
     }
 
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < size_.columns(); j++) {
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
             data_[i][j] += matrix.data_[i][j];
         }
     }
@@ -201,15 +222,15 @@ Matrix<Type>& Matrix<Type>::operator+=(const Matrix<Type>& matrix) {
 }
 
 template<class Type>
-Matrix<Type>& Matrix<Type>::operator-=(const Matrix<Type>& matrix) {
+Matrix<Type>& Matrix<Type>::operator-= (const Matrix<Type>& matrix) {
     
-    if (!size_.isMatchedForAdditionWith(matrix.size_)) {
+    if (size_ != matrix.size_) {
         std::cerr << "Error in class Matrix: invalid matrix size for subtraction.";
         throw;
     }
 
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < size_.columns(); j++) {
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
             data_[i][j] -= matrix.data_[i][j];
         }
     }
@@ -218,18 +239,18 @@ Matrix<Type>& Matrix<Type>::operator-=(const Matrix<Type>& matrix) {
 }
 
 template<class Type>
-Matrix<Type>& Matrix<Type>::operator*=(const Matrix<Type>& matrix) {
+Matrix<Type>& Matrix<Type>::operator*= (const Matrix<Type>& matrix) {
     
     if (!size_.isMatchedForMultiplicationOn(matrix.size_)) {
         std::cerr << "Error in class Matrix: invalid matrix size for multiplication.";
         throw;
     }
 
-    Matrix<Type> temp_argument(matrix);
     Matrix<Type> temp_this(*this);
-    Type cell;
+    Matrix<Type> temp_argument(matrix);
+    Type result_cell;
 
-    for (size_t i = 0; i < size_.rows(); i++) {
+    for (size_t i = 0; i < size_.rows(); ++i) {
         delete[] data_[i];
     }
     delete[] data_;
@@ -240,13 +261,13 @@ Matrix<Type>& Matrix<Type>::operator*=(const Matrix<Type>& matrix) {
         data_[i] = new Type[size_.columns()];
     }
 
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < matrix.size_.columns(); j++) {
-            cell = Type();
-            for (size_t k = 0; k < size_.columns(); k++) {
-                cell += temp_this.data_[i][k] * temp_argument.data_[k][j];
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            result_cell = Type();
+            for (size_t k = 0; k < temp_this.size_.columns(); ++k) {
+                result_cell += temp_this.data_[i][k] * temp_argument.data_[k][j];
             }
-            data_[i][j] = cell;
+            data_[i][j] = result_cell;
         }
     }
 
@@ -254,10 +275,10 @@ Matrix<Type>& Matrix<Type>::operator*=(const Matrix<Type>& matrix) {
 }
 
 template<class Type>
-Matrix<Type>& Matrix<Type>::operator*=(const Type & scalar) {
+Matrix<Type>& Matrix<Type>::operator*= (const Type& scalar) {
     
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < size_.columns(); j++) {
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
             data_[i][j] *= scalar;
         }
     }
@@ -266,70 +287,49 @@ Matrix<Type>& Matrix<Type>::operator*=(const Type & scalar) {
 }
 
 template<class Type>
-Matrix<Type> Matrix<Type>::operator+(const Matrix<Type>& matrix) const {
+Matrix<Type> Matrix<Type>::operator+ (const Matrix<Type>& matrix) const {
 
-    if (!size_.isMatchedForAdditionWith(matrix.size_)) {
+    if (size_ != matrix.size_) {
         std::cerr << "Error in class Matrix: invalid matrix size for addition.";
         throw;
     }
 
-    Matrix<Type> result(size_.rows(), size_.columns());
-
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < size_.columns(); j++) {
-            result[i][j] = data_[i][j] + matrix.data_[i][j];
-        }
-    }
+    Matrix<Type> result(*this);
+    result += matrix;
 
     return result;
 }
 
 template<class Type>
-Matrix<Type> Matrix<Type>::operator-(const Matrix<Type>& matrix) const {
+Matrix<Type> Matrix<Type>::operator- (const Matrix<Type>& matrix) const {
     
-    if (!size_.isMatchedForAdditionWith(matrix.size_)) {
+    if (size_ != matrix.size_) {
         std::cerr << "Error in class Matrix: invalid matrix size for subtraction.";
         throw;
     }
 
-    Matrix<Type> result(size_.rows(), size_.columns());
-
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < size_.columns(); j++) {
-            result[i][j] = data_[i][j] - matrix.data_[i][j];
-        }
-    }
+    Matrix<Type> result(*this);
+    result -= matrix;
 
     return result;
 }
 
 template<class Type>
-Matrix<Type> Matrix<Type>::operator*(const Matrix<Type>& matrix) const {
+Matrix<Type> Matrix<Type>::operator* (const Matrix<Type>& matrix) const {
     
     if (!size_.isMatchedForMultiplicationOn(matrix.size_)) {
         std::cerr << "Error in class Matrix: invalid matrix size for multiplication.";
         throw;
     }
 
-    Matrix<Type> result(size_.rows(), matrix.size_.columns());
-    Type cell;
-
-
-    for (size_t i = 0; i < size_.rows(); i++) {
-        for (size_t j = 0; j < matrix.size_.columns(); j++) {
-            cell = Type();
-            for (size_t k = 0; k < size_.columns(); k++) {
-                cell += data_[i][k] * matrix.data_[k][j];
-            }
-            result.data_[i][j] = cell;
-        }
-    }
+    Matrix<Type> result(*this);
+    result *= matrix;
 
     return result;
 }
 
 template<class Type>
-Matrix<Type> Matrix<Type>::operator*(const Type & scalar) const {
+Matrix<Type> Matrix<Type>::operator* (const Type& scalar) const {
 
     Matrix<Type> result(*this);
     result *= scalar;
@@ -337,27 +337,29 @@ Matrix<Type> Matrix<Type>::operator*(const Type & scalar) const {
 }
 
 template<class Type>
-Matrix<Type> Matrix<Type>::operator^(size_t degree) const {
+Matrix<Type> Matrix<Type>::operator^ (size_t degree) const {
 
     Matrix<Type> result(*this);
-        for (size_t i = 0; i < degree - 1; i++) {
-            result *= *this;
-        };
+    for (size_t i = 0; i < degree - 1; ++i) {
+        result *= *this;
+    }
 
-        return result;
+    return result;
 }
 
 template<class Type>
-bool Matrix<Type>::operator==(const Matrix<Type>& matrix) const {
-    if (!size_.isMatchedForAdditionWith(matrix.size_)) {
+bool Matrix<Type>::operator== (const Matrix<Type>& matrix) const {
+
+    if (size_ != matrix.size_) {
         std::cerr << "Error in class Matrix: invalid matrix size for comparison.";
         throw;
     }
 
-    for (size_t  i = 0; i < size_.columns(); i++) {
-        for (size_t j = 0; j < size_.rows(); j++) {
-            if (data_[i][j] != matrix.data_[i][j])
+    for (size_t  i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            if (data_[i][j] != matrix.data_[i][j]) {
                 return false;
+            }
         }
 
     }
@@ -366,23 +368,13 @@ bool Matrix<Type>::operator==(const Matrix<Type>& matrix) const {
 
 template<class Type>
 Matrix<Type> Matrix<Type>::transpose() const {
-    if (!size_.isMatchedForMultiplicationOn(size_)) {
-        std::cerr << "Error in class Matrix: invalid matrix size for transpose.";
-        throw;
-    }
 
-    Matrix<Type> result(size_.rows(),size_.columns());
+    Matrix<Type> result(size_.columns(), size_.rows());
 
-    for (size_t i = 0; i < size_.rows()-1; i++) {
-        for (size_t j = i + 1; j < size_.columns(); j++) {
-            result.data_[i][j] = data_[j][i];
-            result.data_[j][i] = data_[i][j];
-
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            result(j, i) = data_[i][j];
         }
-    }
-
-    for (size_t i = 0; i < size_.columns(); i++) {
-        result.data_[i][i] = data_[i][i];
     }
 
     return result;

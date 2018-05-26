@@ -12,66 +12,83 @@ void testComplex();
 
 
 int main() {
+    //testComplex();
     testMatrix();
-    testComplex();
 
     cout << "\n";
+    system("pause");
     return 0;
 }
 
 
 
 void testMatrix() {
-    math::MatrixSize size0(5, 6);
-    int** arr = new int*[size0.rows()];
-    for (size_t i = 0; i < size0.rows(); ++i) {
-        arr[i] = new int[size0.columns()];
-        for (size_t j = 0; j < size0.columns(); ++j) {
-            arr[i][j] = static_cast<int>(i * j + 1 + j);
+    math::Matrix<double> m1;
+    cout << "Matrix1: " << m1 << '\n';
+
+    math::Matrix<double> m2(2, 3);
+    cout << "Matrix2: " << m2 << '\n';
+
+    math::MatrixSize size3(3, 2);
+    double** arr = new double*[size3.rows()];
+    for (size_t i = 0; i < size3.rows(); ++i) {
+        arr[i] = new double[size3.columns()];
+        for (size_t j = 0; j < size3.columns(); ++j) {
+            arr[i][j] = static_cast<double>(i * j + 1 + j);
         }
     }
+    math::Matrix<double> m3(arr, size3);
+    cout << "Matrix3: " << m3 << '\n';
 
-    math::Matrix<int> m1 = {{1, 64}, {45, 4}, {4, 5}};
-    math::Matrix<int> m2(4, 6);
-    math::Matrix<int> m3(arr, size0.rows(), size0.columns());
-    cout << "Matrix1: " << m1 << "\n";
-    cout << "Matrix2: " << m2 << "\n";
-    cout << "Matrix3: " << m3 << "\n";
+    math::Matrix<double> m4 = m3;
+    cout << "Matrix4: " << m4 << '\n';
 
-    math::Matrix<math::ComplexNumber> mc = {
+    math::Matrix<double> m5 = {
+        {2, 17}, 
+        {1, 0}, 
+        {5, -1}
+    };
+    cout << "Matrix5: " << m5 << '\n';
+
+    ++m5(0, 1);
+    cout << "Matrix5: " << m5 << '\n';
+
+    m1 = m5;
+    cout << "Matrix1: " << m1 << '\n';
+
+    m1 -= m3;
+    cout << "Matrix1: " << m1 << '\n';
+
+    m1 *= {{1}, {2}};
+    cout << "Matrix1: " << m1 << '\n';
+
+    m1 *= -1 / 6.;
+    cout << "Matrix1: " << m1 << '\n';
+
+    cout << "Matrix5 + Matrix5: " << m5 + m5 << '\n';
+
+    cout << "Matrix2 * Matrix5: " << m2 * m5 << '\n';
+
+    cout << "Matrix5 * 2: " << m5 * 2 << '\n';
+
+    math::Matrix<double> m6 = {{2, 1}, {1, 3}};
+    cout << "Matrix6 ^ 7: " << (m6 ^ 7) << '\n';
+
+    math::Matrix<double> m7 = {{1, 0}, {0, 1}};
+    if (m7 == (m7 ^ 70)) {
+        cout << "m7 == m7 ^ 70";
+    } else {
+        cout << "m7 != m7 ^ 70";
+    }
+    cout << '\n';
+    
+    cout << "Matrix5.transpose: " << m5.transpose() << '\n';
+
+    math::Matrix<math::ComplexNumber> m8 = {
         {{2, 1}, {-1, 4}},
         {{0, 0}, {3, -7}}
     };
-    cout << "Complex matrix: " << mc;
-
-    math::Matrix<int> m4 = { { 1, 64 },{ 45, 4 },{ 4, 5 } };
-    math::Matrix<int> m5 = { { 2, 6 },{ 452, 7 },{ 0, 5 } };
-    m4 += m5;
-    cout << "Matrix4: " << m4 << "\n";
-
-    m4 *= 5;
-    cout << "Matrix4: " << m4 << "\n";
-
-    math::Matrix<int> m6 = { { 3, 3, 3 },{ 3, 3, 3 } };
-    math::Matrix<int> m7 = { { 1 },{ 1 },{ 1 } };
-    m4 = m6;
-    m4 *= m7;
-    cout << "Matrix4: " << m4 << "\n";
-    math::Matrix<int> m8(4, 0);
-    math::Matrix<int> m9(0, 3);
-    cout << m8 * m9 << endl;
-
-    math::Matrix<int> m10 = { { 2, 6, 5 },{ 452, 7, 10 },{ 15, 8, 42 } };
-    cout << "Matrix10: " << m10 << "\n";
-    cout << "Transposed m10: " << m10.transpose() << endl;
-    cout << "m10 in 3 degree" << (m10 ^ 3) << endl;
-    m9 = m10;
-    if(m9==m10){
-        cout << "m9 == m10";
-    } else {
-        cout << "m9 != m10";
-    }
-    cout << '\n';
+    cout << "Complex matrix: " << m8 << '\n';
 }
 
 void testComplex() {

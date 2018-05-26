@@ -9,13 +9,15 @@ namespace math {
 class MatrixSize {
 public:
     MatrixSize();
-    explicit MatrixSize(size_t rows, size_t columns);
+    MatrixSize(size_t rows, size_t columns);
+    MatrixSize(const MatrixSize& size);
     virtual ~MatrixSize();
+    MatrixSize& operator= (const MatrixSize& size);
+    bool operator== (const MatrixSize& size) const;
+    bool operator!= (const MatrixSize& size) const;
+    bool isMatchedForMultiplicationOn(const MatrixSize& size) const;
     size_t rows() const;
     size_t columns() const;
-    MatrixSize& operator=(const MatrixSize& size);
-    bool isMatchedForMultiplicationOn(const MatrixSize& size) const;
-    bool isMatchedForAdditionWith(const MatrixSize& size) const;
 
 
 protected:
