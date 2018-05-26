@@ -48,7 +48,7 @@ public:
     Matrix<Type> operator- (const Matrix<Type>& matrix) const;
     Matrix<Type> operator* (const Matrix<Type>& matrix) const; // TODO What if 4x0 and 0x3?
     Matrix<Type> operator* (const Type& scalar) const;
-    Matrix<Type> operator^ (size_t degree) const;
+    Matrix<Type> operator^ (size_t degree) const; // TODO degree == 0?
     bool operator== (const Matrix<Type>& matrix) const;
     Matrix<Type> transpose() const;
     Matrix<Type> invertible() const;
@@ -333,6 +333,58 @@ Matrix<Type> Matrix<Type>::operator*(const Type & scalar) const {
 
     Matrix<Type> result(*this);
     result *= scalar;
+    return result;
+}
+
+template<class Type>
+Matrix<Type> Matrix<Type>::operator^(size_t degree) const {
+
+    Matrix<Type> result(*this);
+        for (size_t i = 0; i < degree - 1; i++) {
+            result *= *this;
+        };
+
+        return result;
+}
+
+template<class Type>
+bool Matrix<Type>::operator==(const Matrix<Type>& matrix) const {
+    if (!size_.isMatchedForAdditionWith(matrix.size_)) {
+        std::cerr << "Error in class Matrix: invalid matrix size for comparison.";
+        throw;
+    }
+
+    for (size_t  i = 0; i < size_.columns(); i++) {
+        for (size_t j = 0; j < size_.rows(); j++) {
+            if (data_[i][j] != matrix.data_[i][j])
+                return false;
+        }
+
+    }
+    return true;
+}
+
+template<class Type>
+Matrix<Type> Matrix<Type>::transpose() const {
+    if (!size_.isMatchedForMultiplicationOn(size_)) {
+        std::cerr << "Error in class Matrix: invalid matrix size for transpose.";
+        throw;
+    }
+
+    Matrix<Type> result(size_.rows(),size_.columns());
+
+    for (size_t i = 0; i < size_.rows()-1; i++) {
+        for (size_t j = i + 1; j < size_.columns(); j++) {
+            result.data_[i][j] = data_[j][i];
+            result.data_[j][i] = data_[i][j];
+
+        }
+    }
+
+    for (size_t i = 0; i < size_.columns(); i++) {
+        result.data_[i][i] = data_[i][i];
+    }
+
     return result;
 }
 

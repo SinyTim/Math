@@ -57,6 +57,21 @@ void testMatrix() {
     m4 = m6;
     m4 *= m7;
     cout << "Matrix4: " << m4 << "\n";
+    math::Matrix<int> m8(4, 0);
+    math::Matrix<int> m9(0, 3);
+    cout << m8 * m9 << endl;
+
+    math::Matrix<int> m10 = { { 2, 6, 5 },{ 452, 7, 10 },{ 15, 8, 42 } };
+    cout << "Matrix10: " << m10 << "\n";
+    cout << "Transposed m10: " << m10.transpose() << endl;
+    cout << "m10 in 3 degree" << (m10 ^ 3) << endl;
+    m9 = m10;
+    if(m9==m10){
+        cout << "m9 == m10";
+    } else {
+        cout << "m9 != m10";
+    }
+    cout << '\n';
 }
 
 void testComplex() {
