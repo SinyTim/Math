@@ -51,12 +51,14 @@ public:
     Matrix<Type> operator* (const Type& scalar) const;
     Matrix<Type> operator^ (size_t degree) const; // TODO degree == 0?
     bool operator== (const Matrix<Type>& matrix) const;
+    Matrix<Type> withoutRow(size_t row_number) const;
+    Matrix<Type> withoutColumn(size_t column_number) const;
     Matrix<Type> transpose() const;
     Matrix<Type> invertible() const;
     Type determinant() const;
     size_t rank() const;
-    Type** getData() const;
-    MatrixSize getSize() const;
+    MatrixSize size() const;
+    Type** data() const;
     friend std::ostream& operator<< <Type> (std::ostream& out, const Matrix<Type>& matrix);
 
 
@@ -378,6 +380,26 @@ Matrix<Type> Matrix<Type>::transpose() const {
     }
 
     return result;
+}
+
+/*template<class Type>
+Type Matrix<Type>::determinant() const {
+
+    if (!size_.isSquare()) {
+        std::cerr << "Error in class Matrix: invalid matrix size for determinant.";
+        throw;
+    }
+
+}*/
+
+template<class Type>
+MatrixSize Matrix<Type>::size() const {
+    return size_;
+}
+
+template<class Type>
+Type** Matrix<Type>::data() const {
+    return data_;
 }
 
 

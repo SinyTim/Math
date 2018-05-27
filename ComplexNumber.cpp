@@ -125,7 +125,7 @@ double ComplexNumber::modulus() const {
     return sqrt(real_ * real_ + imaginary_ * imaginary_);
 }
 
-std::ostream& math::operator<< (std::ostream& out, const ComplexNumber& complex) {
+std::ostream& operator<< (std::ostream& out, const ComplexNumber& complex) {
     if (complex.real_ != 0) {
         out << complex.real_;
     }
