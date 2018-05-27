@@ -22,6 +22,25 @@ int main() {
 
 
 
+void testComplex() {
+    math::ComplexNumber c1(2, -2), c2(2, -2);
+    c2 *= 1.0000000001;
+
+    if (c1 == c2) {
+        cout << c1 << " == " << c2;
+    } else {
+        cout << c1 << " != " << c2;
+    }
+    cout << '\n';
+
+    math::ComplexNumber c3(5, 10), c4(3, 4);
+    cout << c3 * c4 << endl;
+    cout << c3 / c4 << endl;
+
+    cout << c4.conjugate() << endl;
+    cout << c4.modulus() << endl;
+}
+
 void testMatrix() {
     math::Matrix<double> m1;
     cout << "Matrix1: " << m1 << '\n';
@@ -84,28 +103,11 @@ void testMatrix() {
     
     cout << "Matrix5.transpose: " << m5.transpose() << '\n';
 
+    cout << "Matrix5 size: " << m5.size() << '\n';
+
     math::Matrix<math::ComplexNumber> m8 = {
         {{2, 1}, {-1, 4}},
         {{0, 0}, {3, -7}}
     };
     cout << "Complex matrix: " << m8 << '\n';
-}
-
-void testComplex() {
-    math::ComplexNumber c1(2, -2), c2(2, -2);
-    c2 *= 1.0000000001;
-
-    if (c1 == c2) {
-        cout << c1 << " == " << c2;
-    } else {
-        cout << c1 << " != " << c2;
-    }
-    cout << '\n';
-
-    math::ComplexNumber c3(5, 10), c4(3, 4);
-    cout << c3 * c4 << endl;
-    cout << c3 / c4 << endl;
-
-    cout << c4.conjugate() << endl;
-    cout << c4.modulus() << endl;
 }

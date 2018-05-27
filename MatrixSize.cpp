@@ -37,6 +37,10 @@ bool MatrixSize::operator!= (const MatrixSize& size) const {
     return (rows_ != size.rows_) || (columns_ != size.columns_);
 }
 
+bool MatrixSize::isSquare() const {
+    return (rows_ == columns_);
+}
+
 bool MatrixSize::isMatchedForMultiplicationOn(const MatrixSize& size) const {
     return (columns_ == size.rows_);
 }
@@ -47,6 +51,11 @@ size_t MatrixSize::rows() const {
 
 size_t MatrixSize::columns() const {
     return columns_;
+}
+
+std::ostream& operator<< (std::ostream& out, const MatrixSize& size) {
+    out << size.rows_ << 'x' << size.columns_;
+    return out;
 }
 
 
