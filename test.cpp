@@ -1,6 +1,8 @@
 #include <iostream>
+#include <vector>
 #include "Matrix.h"
 #include "ComplexNumber.h"
+#include "Polynomial.h"
 
 
 using namespace std;
@@ -8,12 +10,14 @@ using namespace std;
 
 void testMatrix();
 void testComplex();
+void testPolynom();
 
 
 
 int main() {
     //testComplex();
     testMatrix();
+    testPolynom();
 
     cout << "\n";
     system("pause");
@@ -110,4 +114,14 @@ void testMatrix() {
         {{0, 0}, {3, -7}}
     };
     cout << "Complex matrix: " << m8 << '\n';
+}
+
+void testPolynom()     {
+    vector<double> coef1 = { -15,6,-2,0,3,5 };
+    math::Polynomial<double> pol1(coef1);
+    cout << pol1 << endl;
+    vector<double> coef2 = { -4, 4, 1 };
+    math::Polynomial<double> pol2(coef2);
+    cout << pol1 / pol2 << endl;
+    cout << pol1 % pol2 << endl;
 }
