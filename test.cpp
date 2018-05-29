@@ -124,4 +124,7 @@ void testPolynom()     {
     math::Polynomial<double> pol2(coef2);
     cout << pol1 / pol2 << endl;
     cout << pol1 % pol2 << endl;
+    math::Polynomial<double> pol3({6, -7, 0, 1});
+    math::Polynomial<double> pol4({ 8, -10, 1, 1 });
+    cout << pol3.gcd(pol4) << endl;
 }
