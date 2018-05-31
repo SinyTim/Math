@@ -24,6 +24,7 @@ public:
     ComplexNumber operator* (const ComplexNumber& complex) const;
     ComplexNumber operator/ (const ComplexNumber& complex) const;
     bool operator== (const ComplexNumber& complex) const;
+    bool operator!= (const ComplexNumber& complex) const;
     ComplexNumber conjugate() const;
     double modulus() const;
     friend std::ostream& operator<< (std::ostream& out, const ComplexNumber& complex);

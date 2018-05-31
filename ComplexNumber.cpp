@@ -117,6 +117,10 @@ bool ComplexNumber::operator== (const ComplexNumber& complex) const {
             (fabs(imaginary_ - complex.imaginary_) < EPS));
 }
 
+bool ComplexNumber::operator!= (const ComplexNumber& complex) const {
+    return !((*this) == complex);
+}
+
 ComplexNumber ComplexNumber::conjugate() const {
     return ComplexNumber(real_, -imaginary_);
 }

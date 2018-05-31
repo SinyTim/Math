@@ -16,7 +16,7 @@ void testPolynom();
 
 int main() {
     //testComplex();
-    testMatrix();
+    //testMatrix();
     testPolynom();
 
     cout << "\n";
@@ -116,15 +116,37 @@ void testMatrix() {
     cout << "Complex matrix: " << m8 << '\n';
 }
 
-void testPolynom()     {
-    vector<double> coef1 = { -15,6,-2,0,3,5 };
-    math::Polynomial<double> pol1(coef1);
-    cout << pol1 << endl;
-    vector<double> coef2 = { -4, 4, 1 };
-    math::Polynomial<double> pol2(coef2);
-    cout << pol1 / pol2 << endl;
-    cout << pol1 % pol2 << endl;
-    math::Polynomial<double> pol3({6, -7, 0, 1});
-    math::Polynomial<double> pol4({ 8, -10, 1, 1 });
-    cout << pol3.gcd(pol4) << endl;
+void testPolynom() {
+    math::Polynomial<double> p1;
+    cout << "Polynom1: " << p1 << '\n';
+
+    vector<double> coef2 = {-15, 6, -2, 0, 3, 0};
+    math::Polynomial<double> p2(coef2);
+    cout << "Polynom2: " << p2 << '\n';
+
+    math::Polynomial<double> p3 = p2;
+    cout << "Polynom3: " << p3 << '\n';
+
+    ++p3[3];
+    cout << "Polynom3: " << p3 << '\n';
+
+    p2 -= p3;
+    cout << "Polynom2: " << p2 << '\n';
+
+    math::Polynomial<double> p4({1, 1});
+    p4 *= math::Polynomial<double>({1, 1});
+    cout << "Polynom4: " << p4 << '\n';
+
+    math::Polynomial<double> p5({1, 1, 0, 1});
+    math::Polynomial<double> p6({1, 1, 1});
+    cout << "p5 / p6: " << p5 / p6 << '\n';
+    cout << "p5 % p6: " << p5 % p6 << '\n';
+
+    math::Polynomial<double> p7({6, -7, 0, 1});
+    math::Polynomial<double> p8({8, -10, 1, 1});
+    cout << "p7.gcd(p8): " << p7.gcd(p8) << '\n';
+
+    cout << "p8.derivative(): " << p8.derivative() << '\n';
+
+    cout << "p6.value(2): " << p6.value(2) << '\n';
 }

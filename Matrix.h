@@ -40,6 +40,7 @@ public:
     Matrix(std::initializer_list< std::initializer_list<Type> > list);
     virtual ~Matrix();
     Type& operator() (size_t row, size_t column);
+    Type operator() (size_t row, size_t column) const;
     Matrix<Type>& operator= (const Matrix<Type>& matrix);
     Matrix<Type>& operator+= (const Matrix<Type>& matrix);
     Matrix<Type>& operator-= (const Matrix<Type>& matrix);
@@ -49,8 +50,9 @@ public:
     Matrix<Type> operator- (const Matrix<Type>& matrix) const;
     Matrix<Type> operator* (const Matrix<Type>& matrix) const;
     Matrix<Type> operator* (const Type& scalar) const;
-    Matrix<Type> operator^ (size_t degree) const; // TODO degree == 0?
+    Matrix<Type> operator^ (size_t degree) const;
     bool operator== (const Matrix<Type>& matrix) const;
+    bool operator!= (const Matrix<Type>& matrix) const;
     Matrix<Type> withoutRow(size_t row_number) const;
     Matrix<Type> withoutColumn(size_t column_number) const;
     Matrix<Type> transpose() const;
@@ -340,6 +342,11 @@ Matrix<Type> Matrix<Type>::operator* (const Type& scalar) const {
 
 template<class Type>
 Matrix<Type> Matrix<Type>::operator^ (size_t degree) const {
+
+    if (degree == 0) {
+        std::cerr << "Error in class Matrix: zero degree.";
+        throw;
+    }
 
     Matrix<Type> result(*this);
     for (size_t i = 0; i < degree - 1; ++i) {

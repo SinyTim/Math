@@ -8,20 +8,23 @@
 namespace math {
 
 
+
 template <class Type>
 class Polynomial;
 
 template<class Type>
-std::ostream& operator<<(std::ostream& out, const Polynomial<Type>& polynom) {
+std::ostream& operator<< (std::ostream& out, const Polynomial<Type>& polynom) {
+
     if (polynom.coefficients_.size() > 1 ) {
-        out << "(" << polynom.coefficients_[polynom.coefficients_.size() - 1]
-            << ")*x^" << polynom.coefficients_.size() - 1;
+
+        out << "(" << polynom.coefficients_.back()
+            << ")*x^" << polynom.degree();
         for (size_t i = polynom.coefficients_.size() - 2; i > 0; --i) {
-            if (polynom.coefficients_[i] != Type()) {
-                out << " + (" << polynom.coefficients_[i] << ")*x^" << i;
+            if (polynom[i] != Type()) {
+                out << " + (" << polynom[i] << ")*x^" << i;
             }
         }
-        if (polynom.coefficients_[0] != Type()) {
+        if (polynom[0] != Type()) {
             out << " + (" << polynom.coefficients_[0] << ")";
         }
 
@@ -32,6 +35,8 @@ std::ostream& operator<<(std::ostream& out, const Polynomial<Type>& polynom) {
     return out;
 }
 
+
+
 template <class Type>
 class Polynomial {
 
@@ -41,6 +46,7 @@ public:
     Polynomial(const Polynomial<Type>& polynom);
     virtual ~Polynomial();
     Type& operator[] (size_t coefficient_number);
+    Type operator[] (size_t coefficient_number) const;
     Polynomial<Type>& operator= (const Polynomial<Type>& polynom);
     Polynomial<Type>& operator+= (const Polynomial<Type>& polynom);
     Polynomial<Type>& operator-= (const Polynomial<Type>& polynom);
@@ -51,13 +57,15 @@ public:
     Polynomial<Type> operator/ (const Polynomial<Type>& polynom) const;
     Polynomial<Type> operator% (const Polynomial<Type>& polynom) const;
     bool operator== (const Polynomial<Type>& polynom) const;
+    bool operator!= (const Polynomial<Type>& polynom) const;
     Polynomial<Type> gcd(const Polynomial<Type>& polynom) const;
     Polynomial<Type> derivative() const;
     size_t degree() const;
     Type value(const Type& x) const;
-//    std::vector<> roots() const;
     friend std::ostream& operator<< <Type> (std::ostream& out, 
                                             const Polynomial<Type>& polynom);
+protected:
+    void eraseLeadingZeros();
 
 
 protected:
@@ -73,11 +81,17 @@ Polynomial<Type>::Polynomial() {
 
 template<class Type>
 Polynomial<Type>::Polynomial(const std::vector<Type>& coefficients) {
-    coefficients_ = coefficients;
+
+    if (!coefficients.empty()) {
+        coefficients_ = coefficients;
+    } else {
+        coefficients_.push_back(Type());
+    }
+
     size_t i = coefficients_.size() - 1;
-    while (coefficients_[i] == Type() && i>0) {
-        --i;
+    while ((coefficients_[i] == Type()) && (i > 0)) {
         coefficients_.pop_back();
+        --i;
     }
 }
 
@@ -87,205 +101,225 @@ Polynomial<Type>::Polynomial(const Polynomial<Type>& polynom) {
 }
 
 template<class Type>
-Polynomial<Type>::~Polynomial() {}
+Polynomial<Type>::~Polynomial() = default;
 
 template<class Type>
-Type& Polynomial<Type>::operator[](size_t coefficient_number) {
+Type& Polynomial<Type>::operator[] (size_t coefficient_number) {
     if (coefficient_number >= coefficients_.size()) {
-        std::cerr << "Error in class Polynomial: coefficient doesn't exist.";
+        std::cerr << "Error in class Polynomial: invalid coefficient number.";
         throw;
     }
     return coefficients_[coefficient_number];
 }
 
 template<class Type>
-Polynomial<Type>& Polynomial<Type>::operator=(const Polynomial<Type>& polynom) {
+Type Polynomial<Type>::operator[] (size_t coefficient_number) const {
+    if (coefficient_number >= coefficients_.size()) {
+        std::cerr << "Error in class Polynomial: invalid coefficient number.";
+        throw;
+    }
+    return coefficients_[coefficient_number];
+}
+
+template<class Type>
+Polynomial<Type>& Polynomial<Type>::operator= (const Polynomial<Type>& polynom) {
     coefficients_ = polynom.coefficients_;
     return *this;
 }
 
 template<class Type>
-Polynomial<Type>& Polynomial<Type>::operator+=(const Polynomial<Type>& polynom) {
-    size_t min_size = coefficients_.size() < polynom.coefficients_.size() ?
-        coefficients_.size() : polynom.coefficients_.size();
+Polynomial<Type>& Polynomial<Type>::operator+= (const Polynomial<Type>& polynom) {
+
+    size_t min_size = (coefficients_.size() < polynom.coefficients_.size()) ?
+                       coefficients_.size() : polynom.coefficients_.size();
 
     for (size_t i = 0; i < min_size; ++i) {
-        coefficients_[i] += polynom.coefficients_[i];
+        coefficients_[i] += polynom[i];
     }
 
     for (size_t i = min_size; i < polynom.coefficients_.size(); ++i) {
-        coefficients_.push_back(polynom.coefficients_[i]);
+        coefficients_.push_back(polynom[i]);
     }
 
-    size_t i = coefficients_.size()-1;
-    while (coefficients_[i] == Type() && i>0) {
-        --i;
-        coefficients_.pop_back();
-    }
+    eraseLeadingZeros();
 
     return *this;
 }
 
 template<class Type>
-Polynomial<Type>& Polynomial<Type>::operator-=(const Polynomial<Type>& polynom) {
-    size_t min_size = coefficients_.size() < polynom.coefficients_.size() ?
-        coefficients_.size() : polynom.coefficients_.size();
+Polynomial<Type>& Polynomial<Type>::operator-= (const Polynomial<Type>& polynom) {
+
+    size_t min_size = (coefficients_.size() < polynom.coefficients_.size()) ?
+                       coefficients_.size() : polynom.coefficients_.size();
 
     for (size_t i = 0; i < min_size; ++i) {
-        coefficients_[i] -= polynom.coefficients_[i];
+        coefficients_[i] -= polynom[i];
     }
 
     for (size_t i = min_size; i < polynom.coefficients_.size(); ++i) {
-        coefficients_.push_back(-polynom.coefficients_[i]);
+        coefficients_.push_back(-polynom[i]);
     }
 
-    size_t i = coefficients_.size() - 1;
-    while (coefficients_[i] == Type() && i>0) {
-        --i;
-        coefficients_.pop_back();
-    }
+    eraseLeadingZeros();
 
     return *this;
 }
 
 template<class Type>
-Polynomial<Type>& Polynomial<Type>::operator*=(const Polynomial<Type>& polynom) {
+Polynomial<Type>& Polynomial<Type>::operator*= (const Polynomial<Type>& polynom) {
+
     Polynomial<Type> temp_this(*this);
     coefficients_.clear();
-    coefficients_.resize(temp_this.coefficients_.size() + polynom.coefficients_.size() - 1);
+    coefficients_.resize(temp_this.degree() + polynom.degree() + 1);
 
     for (size_t i = 0; i < temp_this.coefficients_.size(); ++i) {
-        for (size_t j = 0; j < polynom.coefficients_.size(); j++) {
-            coefficients_[i + j] += temp_this.coefficients_[i] * polynom.coefficients_[j];
+        for (size_t j = 0; j < polynom.coefficients_.size(); ++j) {
+            coefficients_[i + j] += temp_this[i] * polynom[j];
         }
     }
-    size_t i = coefficients_.size() - 1;
-    while (coefficients_[i] == Type() && i>0) {
-        --i;
-        coefficients_.pop_back();
-    }
+
+    eraseLeadingZeros();
 
     return *this;
 }
 
 template<class Type>
-Polynomial<Type> Polynomial<Type>::operator+(const Polynomial<Type>& polynom) const {
+Polynomial<Type> Polynomial<Type>::operator+ (const Polynomial<Type>& polynom) const {
     Polynomial<Type> temp_this(*this);
     temp_this += polynom;
     return temp_this;
 }
 
 template<class Type>
-Polynomial<Type> Polynomial<Type>::operator-(const Polynomial<Type>& polynom) const {
+Polynomial<Type> Polynomial<Type>::operator- (const Polynomial<Type>& polynom) const {
     Polynomial<Type> temp_this(*this);
     temp_this -= polynom;
     return temp_this;
 }
 
 template<class Type>
-inline Polynomial<Type> Polynomial<Type>::operator*(const Polynomial<Type>& polynom) const {
+Polynomial<Type> Polynomial<Type>::operator* (const Polynomial<Type>& polynom) const {
     Polynomial<Type> temp_this(*this);
     temp_this *= polynom;
     return temp_this;
 }
 
 template<class Type>
-Polynomial<Type> Polynomial<Type>::operator/(const Polynomial<Type>& polynom) const {
+Polynomial<Type> Polynomial<Type>::operator/ (const Polynomial<Type>& polynom) const {
     if (coefficients_.size() < polynom.coefficients_.size()) {
         return Polynomial<Type>();
     }
-    if (polynom.coefficients_.size() == 0 || (polynom.coefficients_.size() == 1
-        && polynom.coefficients_[0] == Type())) {
+    if ((polynom.coefficients_.size() == 0)
+        || (polynom.coefficients_.size() == 1 && polynom.coefficients_[0] == Type())) {
         std::cerr << "Error in class Polynomial: divide by zero.";
         throw;
     }
-    Polynomial<Type> res;
-    res.coefficients_.resize(coefficients_.size() - polynom.coefficients_.size() + 1);
+
+    Polynomial<Type> result;
+    result.coefficients_.resize(coefficients_.size() - polynom.coefficients_.size() + 1);
     Polynomial<Type> temp_this(*this);
-    for (size_t i = coefficients_.size()-1; i >= polynom.coefficients_.size()-1; --i) {
-        Type coef = temp_this.coefficients_[i] /
-            *polynom.coefficients_.rbegin();
+    for (size_t i = coefficients_.size() - 1; i >= polynom.coefficients_.size() - 1; --i) {
+        Type coef = temp_this.coefficients_[i] / *polynom.coefficients_.rbegin();
         
-        res[i - polynom.coefficients_.size() + 1] = coef;
+        result[i - polynom.coefficients_.size() + 1] = coef;
 
         for (size_t j = 0; j < polynom.coefficients_.size(); ++j) {
-            temp_this[i-j] -= coef * (*(polynom.coefficients_.rbegin()+j));
+            temp_this[i - j] -= coef * (*(polynom.coefficients_.rbegin() + j));
         }
         temp_this.coefficients_.pop_back();
     }
 
-    return res;
+    return result;
 }
 
 template<class Type>
-Polynomial<Type> Polynomial<Type>::operator%(const Polynomial<Type>& polynom) const {
-    Polynomial<Type> div;
-    div = (*this) / polynom;
-    return (*this)-div*polynom;
+Polynomial<Type> Polynomial<Type>::operator% (const Polynomial<Type>& polynom) const {
+    Polynomial<Type> quotient;
+    quotient = (*this) / polynom;
+    return (*this) - (quotient * polynom);
 }
 
 template<class Type>
-bool Polynomial<Type>::operator==(const Polynomial<Type>& polynom) const {
-    if (coefficients_.size() == polynom.coefficients_.size()) {
-        for (size_t i = 0; i < coefficients_.size(); ++i) {
-            if (coefficients_[i] != polynom.coefficients_[i]) {
-                return false;
-            }
-        }
-        return true;
+bool Polynomial<Type>::operator== (const Polynomial<Type>& polynom) const {
+
+    if (coefficients_.size() != polynom.coefficients_.size()) {
+        return false;
     }
-    return false;
+    for (size_t i = 0; i < coefficients_.size(); ++i) {
+        if (coefficients_[i] != polynom[i]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 template<class Type>
-inline Polynomial<Type> Polynomial<Type>::gcd(const Polynomial<Type>& polynom) const {
-    Polynomial<Type> temp;
+bool Polynomial<Type>::operator!= (const Polynomial<Type>& polynom) const {
+    return !((*this) == polynom);
+}
+
+template<class Type>
+Polynomial<Type> Polynomial<Type>::gcd(const Polynomial<Type>& polynom) const {
+
     Polynomial<Type> temp_this(*this);
     Polynomial<Type> temp_polynom(polynom);
-    while (!(temp_polynom == Polynomial())) {
-        temp = temp_polynom;
-        temp_polynom = temp_this % temp_polynom;
-        temp_this = temp;
+    Polynomial<Type> temp;
+
+    while (temp_polynom != Polynomial<Type>()) {
+
+        temp_this = temp_this % temp_polynom;
+
+        temp = temp_this;
+        temp_this = temp_polynom;
+        temp_polynom = temp;
     }
 
-    for (size_t i = 0 ; i <temp_this.coefficients_.size(); ++i) {
+    for (size_t i = 0; i < temp_this.coefficients_.size(); ++i) {
         temp_this.coefficients_[i] /= temp_this.coefficients_.back();
     }
+
     return temp_this;
 }
 
 template<class Type>
 Polynomial<Type> Polynomial<Type>::derivative() const {
-    vector<Type> der_coef;
-    for (size_t i = 1; i < polynom.coefficients_.size(); ++i) {
-        der_coef.push_back(polynom.coefficients_[i] * i);
+    vector<Type> derivative_coefficients;
+    for (size_t i = 1; i < coefficients_.size(); ++i) {
+        derivative_coefficients.push_back(coefficients_[i] * i);
     }
-    if (der_coef.size() > 0) {
-        return Polynomial<Type>(der_coef);
-    } else {
-        return Polynomial<Type>();
-    }
+    return Polynomial<Type>(derivative_coefficients);
 }
 
 template<class Type>
 size_t Polynomial<Type>::degree() const {
-    return size_t(coefficients_.size()-1);
+    return (coefficients_.size() - 1);
 }
 
 template<class Type>
-Type Polynomial<Type>::value(const Type & x) const {
-    Type res=Type();
-    for (size_t i = 0; i < coefficients_.size(); ++i) {
-        
-        Type temp = x;
+Type Polynomial<Type>::value(const Type& x) const {
+    Type result = coefficients_[0];
+    Type temp;
+
+    for (size_t i = 1; i < coefficients_.size(); ++i) {
+        temp = coefficients_[i];
         for (size_t j = 0; j < i; ++j) {
             temp *= x;
         }
-
-        res += temp;
+        result += temp;
     }
+    return result;
+}
 
-    return res;
+template<class Type>
+void Polynomial<Type>::eraseLeadingZeros() {
+
+    size_t i = coefficients_.size() - 1;
+
+    while ((coefficients_[i] == Type()) && (i > 0)) {
+        coefficients_.pop_back();
+        --i;
+    }
 }
 
 
