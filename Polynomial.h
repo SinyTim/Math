@@ -254,6 +254,40 @@ inline Polynomial<Type> Polynomial<Type>::gcd(const Polynomial<Type>& polynom) c
     return temp_this;
 }
 
+template<class Type>
+Polynomial<Type> Polynomial<Type>::derivative() const {
+    vector<Type> der_coef;
+    for (size_t i = 1; i < polynom.coefficients_.size(); ++i) {
+        der_coef.push_back(polynom.coefficients_[i] * i);
+    }
+    if (der_coef.size() > 0) {
+        return Polynomial<Type>(der_coef);
+    } else {
+        return Polynomial<Type>();
+    }
+}
+
+template<class Type>
+size_t Polynomial<Type>::degree() const {
+    return size_t(coefficients_.size()-1);
+}
+
+template<class Type>
+Type Polynomial<Type>::value(const Type & x) const {
+    Type res=Type();
+    for (size_t i = 0; i < coefficients_.size(); ++i) {
+        
+        Type temp = x;
+        for (size_t j = 0; j < i; ++j) {
+            temp *= x;
+        }
+
+        res += temp;
+    }
+
+    return res;
+}
+
 
 
 }
