@@ -184,6 +184,15 @@ Type& Matrix<Type>::operator() (size_t row, size_t column) {
 }
 
 template<class Type>
+Type Matrix<Type>::operator() (size_t row, size_t column) const {
+    if ((row >= size_.rows()) || (column >= size_.columns())) {
+        std::cerr << "Error in class Matrix: invalid parameters.";
+        throw;
+    }
+    return data_[row][column];
+}
+
+template<class Type>
 Matrix<Type>& Matrix<Type>::operator= (const Matrix<Type>& matrix) {
     if (this == &matrix) {
         return *this;
@@ -376,6 +385,68 @@ bool Matrix<Type>::operator== (const Matrix<Type>& matrix) const {
 }
 
 template<class Type>
+bool Matrix<Type>::operator!= (const Matrix<Type>& matrix) const {
+    return !((*this) == matrix);
+}
+
+template<class Type>
+Matrix<Type> Matrix<Type>::withoutRow(size_t row_number) const {
+
+    if (row_number >= size_.rows()) {
+        std::cerr << "Error in class Matrix: invalid row number.";
+        throw;
+    }
+
+    if (size_.rows() == 1) {
+        return Matrix<Type>();
+    }
+
+    Matrix<Type> result(size_.rows() - 1, size_.columns());
+
+    size_t i_result = 0;
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        if (i == row_number) {
+            continue;
+        }
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            result(i_result, j) = data_[i][j];
+        }
+        ++i_result;
+    }
+
+    return result;
+}
+
+template<class Type>
+Matrix<Type> Matrix<Type>::withoutColumn(size_t column_number) const {
+
+    if (column_number >= size_.columns()) {
+        std::cerr << "Error in class Matrix: invalid column number.";
+        throw;
+    }
+
+    if (size_.columns() == 1) {
+        return Matrix<Type>();
+    }
+
+    Matrix<Type> result(size_.rows(), size_.columns() - 1);
+
+    size_t j_result = 0;
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        j_result = 0;
+        for (size_t j = 0; j < size_.columns(); ++j) {
+            if (j == column_number) {
+                continue;
+            }
+            result(i, j_result) = data_[i][j];
+            ++j_result;
+        }
+    }
+
+    return result;
+}
+
+template<class Type>
 Matrix<Type> Matrix<Type>::transpose() const {
 
     Matrix<Type> result(size_.columns(), size_.rows());
@@ -389,7 +460,7 @@ Matrix<Type> Matrix<Type>::transpose() const {
     return result;
 }
 
-/*template<class Type>
+template<class Type>
 Type Matrix<Type>::determinant() const {
 
     if (!size_.isSquare()) {
@@ -397,7 +468,26 @@ Type Matrix<Type>::determinant() const {
         throw;
     }
 
-}*/
+    if (size_ == MatrixSize(1, 1)) {
+        return data_[0][0];
+    }
+
+    Type determinant = Type();
+    Matrix<Type> current_minor;
+
+    for (size_t i = 0; i < size_.rows(); ++i) {
+        current_minor = this->withoutRow(i);
+        current_minor = current_minor.withoutColumn(0);
+
+        if (i % 2 == 0) {
+            determinant += data_[i][0] * current_minor.determinant();
+        } else {
+            determinant -= data_[i][0] * current_minor.determinant();
+        }
+    }
+
+    return determinant;
+}
 
 template<class Type>
 MatrixSize Matrix<Type>::size() const {

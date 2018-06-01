@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComplexNumber.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixSize.h" />
     <ClInclude Include="Polynomial.h" />

@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "Matrix.h"
-#include "ComplexNumber.h"
-#include "Polynomial.h"
+#include "Math.h"
 
 
 using namespace std;
@@ -17,7 +15,7 @@ void testPolynom();
 int main() {
     //testComplex();
     //testMatrix();
-    testPolynom();
+    //testPolynom();
 
     cout << "\n";
     system("pause");
@@ -104,8 +102,24 @@ void testMatrix() {
         cout << "m7 != m7 ^ 70";
     }
     cout << '\n';
+
+    cout << "m5.withoutRow(1): " << m5.withoutRow(1) << '\n';
+
+    cout << "m5.withoutColumn(0): " << m5.withoutColumn(0) << '\n';
     
     cout << "Matrix5.transpose: " << m5.transpose() << '\n';
+
+    cout << "Determinant: " << math::Matrix<int>({
+        {7, 1, 1, 14}, 
+        {3, 2, 2, 12}, 
+        {2, 1, 3, 7}, 
+        {1, 0, 0, 0}
+    }).determinant() << '\n';
+
+    cout << "Determinant: " << math::Matrix< math::Polynomial<int> >({
+        {math::Polynomial<int>({1, 0, 1}), math::Polynomial<int>({1, 2})},
+        {math::Polynomial<int>({-1}), math::Polynomial<int>({1, 1})},
+    }).determinant() << '\n';
 
     cout << "Matrix5 size: " << m5.size() << '\n';
 
