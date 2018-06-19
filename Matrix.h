@@ -56,9 +56,9 @@ public:
     Matrix<Type> withoutRow(size_t row_number) const;
     Matrix<Type> withoutColumn(size_t column_number) const;
     Matrix<Type> transpose() const;
-    Matrix<Type> invertible() const;
+    //Matrix<Type> invertible() const;
     Type determinant() const;
-    size_t rank() const;
+    //size_t rank() const;
     MatrixSize size() const;
     Type** data() const;
     friend std::ostream& operator<< <Type> (std::ostream& out, const Matrix<Type>& matrix);

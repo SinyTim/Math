@@ -15,21 +15,18 @@ class Polynomial;
 template<class Type>
 std::ostream& operator<< (std::ostream& out, const Polynomial<Type>& polynom) {
 
-    if (polynom.coefficients_.size() > 1 ) {
+    for (size_t i = polynom.coefficients_.size() - 1; i > 0; --i) {
 
-        out << "(" << polynom.coefficients_.back()
-            << ")*x^" << polynom.degree();
-        for (size_t i = polynom.coefficients_.size() - 2; i > 0; --i) {
-            if (polynom[i] != Type()) {
-                out << " + (" << polynom[i] << ")*x^" << i;
-            }
+        if (polynom[i] != Type()) {
+            out << "(" << polynom[i] << ")*x^" << i;
         }
-        if (polynom[0] != Type()) {
-            out << " + (" << polynom.coefficients_[0] << ")";
+        if (polynom[i - 1] != Type()) {
+            out << " + ";
         }
+    }
 
-    } else {
-        out << polynom.coefficients_[0];
+    if ((polynom[0] != Type()) || (polynom.degree() == 0)) {
+        out << "(" << polynom.coefficients_[0] << ")";
     }
 
     return out;
@@ -217,10 +214,12 @@ Polynomial<Type> Polynomial<Type>::operator/ (const Polynomial<Type>& polynom) c
 
     Polynomial<Type> result;
     result.coefficients_.resize(coefficients_.size() - polynom.coefficients_.size() + 1);
+    
     Polynomial<Type> temp_this(*this);
+
     for (size_t i = coefficients_.size() - 1; i >= polynom.coefficients_.size() - 1; --i) {
-        Type coef = temp_this.coefficients_[i] / *polynom.coefficients_.rbegin();
-        
+        Type coef = temp_this.coefficients_[i] / polynom.coefficients_.back();
+
         result[i - polynom.coefficients_.size() + 1] = coef;
 
         for (size_t j = 0; j < polynom.coefficients_.size(); ++j) {
